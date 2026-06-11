@@ -27,6 +27,8 @@ jobs:
       - name: Build APK
         run: |
           export PATH=$PATH:~/.local/bin
+           # Menjawab 'y' untuk setiap lisensi SDK yang muncul
+          (while sleep 3; do echo "y"; done) | buildozer android debug 2>&1 | tee buildozer_log.txt
           buildozer android debug
 
       - name: Upload APK
