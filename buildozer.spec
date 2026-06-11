@@ -12,8 +12,8 @@ android.permissions = INTERNET
 android.api = 33
 android.minapi = 21
 android.archs = arm64-v8a, armeabi-v7a
-android.ndk = 25b
-android.ndk_api = 21
 
 [buildozer]
 log_level = 2
+# Gunakan dist terbaru yang kompatibel dengan Ubuntu 24.04/22.04
+p4a.branch = master
