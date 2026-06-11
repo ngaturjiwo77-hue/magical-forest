@@ -14,17 +14,31 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip git zip unzip openjdk-17-jdk python3-venv cmake autoconf automake libtool m4
+          sudo apt-get install -y python3-pip git zip unzip openjdk-17-jdk python3-venv autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libffi-dev libssl-dev cmake m4 automake
+
+      - name: Setup Android SDK
+        run: |
+          # Download cmdline-tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip commandlinetools-linux-11076708_latest.zip -d cmdline-tools
+          mkdir -p android-sdk/cmdline-tools
+          mv cmdline-tools/cmdline-tools android-sdk/cmdline-tools/latest
+          
+          # Set Environment Variable
+          echo "ANDROID_HOME=$GITHUB_WORKSPACE/android-sdk" >> $GITHUB_ENV
+          echo "$GITHUB_WORKSPACE/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          
+          # Install SDK components
+          yes | sdkmanager --sdk_root=$GITHUB_WORKSPACE/android-sdk "platform-tools" "platforms;android-33" "build-tools;34.0.0"
 
       - name: Build APK
         run: |
           pip3 install --user --upgrade buildozer
           export PATH=$PATH:~/.local/bin
-          # Gunakan --no-deps agar tidak memicu autoreconf pada library C
+          # Buildozer akan otomatis mendeteksi SDK yang sudah kita siapkan
           buildozer android debug
         env:
-          # Memaksa agar tidak melakukan auto-reconf yang rusak
-          NO_AUTORECONF: "1"
+          ANDROID_HOME: ${{ github.workspace }}/android-sdk
 
       - uses: actions/upload-artifact@v4
         with:
