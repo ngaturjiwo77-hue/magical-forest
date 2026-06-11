@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout source
@@ -28,14 +28,21 @@ jobs:
             zip unzip autoconf libtool pkg-config zlib1g-dev \
             libncurses5-dev libncursesw5-dev cmake
 
-      - name: Install Buildozer and Pinned Cython
+      - name: Install Buildozer and Cython
         run: |
           pip3 install --user buildozer virtualenv "cython==0.29.33"
 
       - name: Build APK with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          yes | buildozer android debug
+          buildozer android debug 2>&1 | tee buildozer_log.txt
+
+      - name: Upload Build Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Buildozer-Log
+          path: buildozer_log.txt
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
