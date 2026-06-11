@@ -10,9 +10,10 @@ orientation = portrait
 fullscreen = 1
 android.permissions = INTERNET
 android.api = 33
-android.sdk_build_tools_version = 34.0.0
 android.minapi = 21
 android.archs = arm64-v8a, armeabi-v7a
-android.allow_backup = True
+android.ndk = 25b
+android.ndk_api = 21
+
 [buildozer]
 log_level = 2

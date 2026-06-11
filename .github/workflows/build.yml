@@ -11,25 +11,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Dependencies
+      - name: Install System Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             python3-pip git zip unzip openjdk-17-jdk \
             python3-venv autoconf libtool pkg-config \
             zlib1g-dev libncurses5-dev libncursesw5-dev \
-            libffi-dev libssl-dev cmake
-
-      - name: Install Buildozer
-        run: |
-          pip3 install --user --upgrade buildozer
+            libffi-dev libssl-dev cmake m4 automake \
+            gettext
 
       - name: Build APK
         run: |
+          pip3 install --user --upgrade buildozer
           export PATH=$PATH:~/.local/bin
-           # Menjawab 'y' untuk setiap lisensi SDK yang muncul
-          (while sleep 3; do echo "y"; done) | buildozer android debug 2>&1 | tee buildozer_log.txt
-          buildozer android debug
+          # Menjawab lisensi SDK secara otomatis
+          (while sleep 3; do echo "y"; done) | buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
