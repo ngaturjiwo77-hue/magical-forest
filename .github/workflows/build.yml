@@ -15,7 +15,10 @@ jobs:
 
       - name: Build APK
         run: |
-          buildozer android debug
+          # Kita gunakan 'yes' untuk menjawab 'y' secara otomatis ke semua prompt
+          # Dan kita tetap memasang env variable untuk berjaga-jaga
+          yes | BUILDOZER_ALLOW_ROOT=1 buildozer android debug
+
         env:
           # Kunci rahasia untuk melewati proteksi root
           BUILDOZER_ALLOW_ROOT: 1
