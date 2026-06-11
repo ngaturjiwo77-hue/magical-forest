@@ -5,7 +5,7 @@ package.domain = org.dustin
 source.dir = .
 source.include_exts = py,png,jpg,ttf
 version = 0.1
-requirements = python3,pygame,sdl2,sdl2_ttf,sdl2_image,sdl2_mixer
+requirements = pygame,sdl2,sdl2_ttf,sdl2_image,sdl2_mixer
 orientation = portrait
 fullscreen = 1
 android.permissions = INTERNET
@@ -19,5 +19,6 @@ android.ndk_api = 21
 
 [buildozer]
 log_level = 2
-p4a.branch = develop
+p4a.branch = master
+# Kita gunakan versi Python yang paling cocok dengan NDK r25b
 p4a.python_version = 3.10
