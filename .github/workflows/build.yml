@@ -8,28 +8,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      # Kita gunakan image yang sudah mengandung SDK/NDK/Toolchain yang kompatibel
+      image: kivy/buildozer:latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-pip git zip unzip openjdk-17-jdk python3-venv autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libffi-dev libssl-dev cmake m4 automake
-
       - name: Build APK
         run: |
-          pip3 install --user --upgrade buildozer
-          export PATH=$PATH:~/.local/bin
-          
-          # 1. Paksa Buildozer untuk mengunduh dan mengupdate SDK secara lengkap
-          # Perintah ini akan mendownload build-tools dan aidl ke tempat yang benar
-          yes | buildozer android update
-          
-          # 2. Baru jalankan proses debug/build
+          # Kita gunakan container yang sudah disetting untuk Python
+          # Ini adalah lingkungan "time capsule" agar tidak ada konflik versi
           buildozer android debug
         env:
-          # Pastikan buildozer tidak bingung soal path
-          ANDROID_HOME: /home/runner/.buildozer/android/platform/android-sdk
+          # Memastikan Buildozer tidak mencari alat sistem yang baru
+          NO_AUTORECONF: "1"
 
       - uses: actions/upload-artifact@v4
         with:
