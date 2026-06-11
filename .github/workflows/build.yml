@@ -32,16 +32,18 @@ jobs:
         run: |
           pip3 install --user buildozer virtualenv "cython==0.29.33"
 
-      - name: Build APK with Buildozer
+      - name: Build APK
         run: |
           export PATH=$PATH:~/.local/bin
+          # Hapus platform build lama agar tidak ada konflik versi Python
+          rm -rf .buildozer/android/platform/build-*
           buildozer android debug 2>&1 | tee buildozer_log.txt
 
-      - name: Upload Build Log
+      - name: Upload Logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Buildozer-Log
+          name: Build-Logs
           path: buildozer_log.txt
 
       - name: Upload APK

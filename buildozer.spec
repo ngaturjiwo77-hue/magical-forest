@@ -19,4 +19,5 @@ android.ndk_api = 21
 
 [buildozer]
 log_level = 2
+p4a.branch = develop
 p4a.python_version = 3.10
