@@ -18,27 +18,28 @@ jobs:
 
       - name: Setup Android SDK
         run: |
-          # Download cmdline-tools
-          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip commandlinetools-linux-11076708_latest.zip -d cmdline-tools
+          # Download SDK Command Line Tools
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools-linux-11076708_latest.zip -d cmdline-tools
+          
+          # Setup Folder Structure
           mkdir -p android-sdk/cmdline-tools
           mv cmdline-tools/cmdline-tools android-sdk/cmdline-tools/latest
           
           # Set Environment Variable
           echo "ANDROID_HOME=$GITHUB_WORKSPACE/android-sdk" >> $GITHUB_ENV
-          echo "$GITHUB_WORKSPACE/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
           
-          # Install SDK components
-          yes | sdkmanager --sdk_root=$GITHUB_WORKSPACE/android-sdk "platform-tools" "platforms;android-33" "build-tools;34.0.0"
+          # Install SDK using Absolute Path (Penting: Panggil langsung filenya!)
+          # Menjawab lisensi SDK secara otomatis
+          yes | $GITHUB_WORKSPACE/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=$GITHUB_WORKSPACE/android-sdk "platform-tools" "platforms;android-33" "build-tools;34.0.0"
 
       - name: Build APK
         run: |
           pip3 install --user --upgrade buildozer
           export PATH=$PATH:~/.local/bin
-          # Buildozer akan otomatis mendeteksi SDK yang sudah kita siapkan
+          export ANDROID_HOME=$GITHUB_WORKSPACE/android-sdk
+          # Buildozer akan mendeteksi SDK di path yang sudah kita buat
           buildozer android debug
-        env:
-          ANDROID_HOME: ${{ github.workspace }}/android-sdk
 
       - uses: actions/upload-artifact@v4
         with:
