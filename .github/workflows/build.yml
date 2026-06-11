@@ -9,19 +9,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      # Kita gunakan image yang sudah mengandung SDK/NDK/Toolchain yang kompatibel
       image: kivy/buildozer:latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Build APK
         run: |
-          # Kita gunakan container yang sudah disetting untuk Python
-          # Ini adalah lingkungan "time capsule" agar tidak ada konflik versi
           buildozer android debug
         env:
-          # Memastikan Buildozer tidak mencari alat sistem yang baru
-          NO_AUTORECONF: "1"
+          # Kunci rahasia untuk melewati proteksi root
+          BUILDOZER_ALLOW_ROOT: 1
+          # Memastikan Buildozer tahu di mana folder home-nya
+          HOME: /home/user
 
       - uses: actions/upload-artifact@v4
         with:
